@@ -5,6 +5,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import LkPage from '@pages/LkPage/LkPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
+import TasksPage from './layouts/TasksPage/TasksPage';
 
 const App = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const App = () => {
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/' element={<HrefPage />} />
         <Route path="/lk" element={<LkPage />} />
+        <Route path='/tasks' element={<TasksPage />} />
       </Routes>
   )
 }

@@ -37,7 +37,7 @@ const Header:FC<IHeaderProps> = ({onToggle, isOpen}) => {
                 variant="outline"
                 aria-label="Toggle sidebar"
                 />
-                <NavLink to='/home'>
+                <NavLink to='/lk'>
                     <Text ml="4" textStyle='h5' color='primary.600' display="inline-block" as='h5' cursor='pointer'>
                     lk du
                     </Text>

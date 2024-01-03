@@ -27,7 +27,7 @@ const Sidebar: FC<ISideBarProps> = ({isOpen}) => {
         >
             Действия
         </Text>
-          <NavLink to="/users/users">
+          <NavLink to="/tasks">
           <Button
             leftIcon={<FaHandHoldingHeart />}
             w='100%'

@@ -55,6 +55,7 @@ const LoginPage:FC<ILoginPageProps> = () => {
         if (response.status === 200) {
             console.log('resp', response.data)
 
+            Cookies.remove('id');
             Cookies.remove('email');
             Cookies.remove('userRole');
             Cookies.remove('userType');
@@ -62,6 +63,7 @@ const LoginPage:FC<ILoginPageProps> = () => {
             Cookies.remove('uuid');
 
             Cookies.set('email', values.email, {expires: fiveMinutes});
+            Cookies.set('id', response.data.id, {expires: fiveMinutes});
             Cookies.set('userRole', response.data.userRole, {expires: fiveMinutes});
             Cookies.set('userType', response.data.userType, {expires: fiveMinutes});
             Cookies.set('token', response.data.token, {expires: fiveMinutes});
