@@ -1,18 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect, useState } from "react";
 import MainLayout from "../MainLayout/MainLayout";
-import { Box, Button, FormControl, FormErrorMessage, FormLabel, IconButton, Input, Spinner, Text, VStack } from "@chakra-ui/react";
-import { CloseIcon, PlusSquareIcon } from "@chakra-ui/icons";
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Badge, Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, IconButton, Input, Spinner, Text, VStack } from "@chakra-ui/react";
+import { CloseIcon, EditIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import { useForm } from "react-hook-form";
-import { createBeneficiaryVerification } from "@/api/createTask";
+import { createBeneficiaryVerification, resubmitBeneficiaryVerification } from "@/api/createTask";
 import Cookies from "js-cookie";
 import { getBeneficiaryVerificationAttempt } from "@/api/getTasks";
+import { colorBadge, status } from "@/utils/status";
 
 interface ITasksPageProps {}
 
 const TasksPage:FC<ITasksPageProps> = () => {
     const [isPopupOpen, setIsPopupOpen] = useState<boolean>();
-    const [isLoading, setIsLoading] = useState<boolean>()
+    const [isLoading, setIsLoading] = useState<boolean>();
+    const [isSubmit, setIsSubmit] = useState<boolean>(true);
+    const [userTask, setUserTask] = useState<{
+        comment?: string,
+        description?: string,
+        numberOfAdults?: number,
+        numberOfChildren?:number,
+        numberOfDisabled?:number,
+        numberOfOld?:number,
+        numberOfPregnant?:number,
+        verificationStatus?:number,
+    }>();
 
     const {
         handleSubmit,
@@ -22,6 +34,7 @@ const TasksPage:FC<ITasksPageProps> = () => {
 
     const token = Cookies.get('token');
     const userId = Cookies.get('id')
+    const userUuid = Cookies.get('uuid')
 
     const onSubmit = async (data: any) => {
         setIsLoading(true);
@@ -49,19 +62,32 @@ const TasksPage:FC<ITasksPageProps> = () => {
             verificationStatus: 0,
         };
 
-        const resp = await createBeneficiaryVerification(
-            token,
-            formData.beneficiary,
-            formData.numberOfAdults,
-            formData.numberOfChildren,
-            formData.numberOfOld,
-            formData.numberOfDisabled,
-            formData.numberOfPregnant,
-            formData.description,
-            formData.documents,
-            formData.comment,
-            formData.verificationStatus,
-        );
+        const resp = isSubmit ? 
+            await createBeneficiaryVerification(
+                token,
+                formData.beneficiary,
+                formData.numberOfAdults,
+                formData.numberOfChildren,
+                formData.numberOfOld,
+                formData.numberOfDisabled,
+                formData.numberOfPregnant,
+                formData.description,
+                formData.documents,
+                formData.comment,
+                formData.verificationStatus,
+        ) : await resubmitBeneficiaryVerification(
+                token,
+                formData.beneficiary,
+                formData.numberOfAdults,
+                formData.numberOfChildren,
+                formData.numberOfOld,
+                formData.numberOfDisabled,
+                formData.numberOfPregnant,
+                formData.description,
+                formData.documents,
+                formData.comment,
+                formData.verificationStatus,
+            );
 
         console.log(resp)
 
@@ -69,6 +95,8 @@ const TasksPage:FC<ITasksPageProps> = () => {
             alert('Заявка успешно создана!')
 
             setIsPopupOpen(false);
+
+            setIsSubmit(true)
 
             location.reload();
         }
@@ -79,22 +107,28 @@ const TasksPage:FC<ITasksPageProps> = () => {
     };
 
     const getUserTask = async () => {
-        const resp = await getBeneficiaryVerificationAttempt(token, userId ? parseInt(userId, 10) : 0)
-
+        const resp = await getBeneficiaryVerificationAttempt(token, userUuid ? userUuid : '')
         console.log(resp)
+        if (resp.status === 200) {
+            setUserTask(resp.data)
+        }
+
+        console.log('TASK', userTask)
     }
 
     useEffect(() => {
         getUserTask()
-    })
+    }, [])
+
     return (
         <MainLayout>
-            <Box>
+            <Box w='100%'>
                 <Text textStyle='h4' as='h1'>Заявки</Text>
                 <Button
                     rightIcon={<PlusSquareIcon />}
                     w='100%'
                     justifyContent="left"
+                    maxW='fit-content'
                     bg='#1e88e5'
                     _hover={{color: 'white' }}
                     mt='4'
@@ -102,6 +136,65 @@ const TasksPage:FC<ITasksPageProps> = () => {
                 >
                     Новая заявка
                 </Button>
+
+                <Accordion defaultIndex={[0]} allowMultiple mt='20px' p='5px'>
+                    <AccordionItem w='100%' borderWidth='1px' borderColor='#1e88e5' borderRadius='15px'>
+                        <AccordionButton w='100%'>
+                            <HStack 
+                                as="span" 
+                                flex='1' 
+                                textAlign='left'  
+                                justifyContent='space-between' 
+                                alignItems='center'
+                            >
+                                <Text as='h4' textStyle='h4'>Заявка на верификацию</Text>
+                                
+                                <Badge 
+                                    colorScheme={colorBadge(userTask?.verificationStatus)} 
+                                    mr='3' 
+                                    fontSize='md' 
+                                    borderRadius='5px' 
+                                    textTransform='lowercase'
+                                >
+                                    {status(userTask?.verificationStatus)}
+                                </Badge>
+                            </HStack>
+                            <AccordionIcon />
+                        </AccordionButton>
+
+                        <AccordionPanel>
+                            <Box>
+                                <Text as='p' textStyle='p'>Кол-во взрослых: {userTask?.numberOfAdults}</Text>
+                                <Text as='p' textStyle='p'>Кол-во детей: {userTask?.numberOfChildren}</Text>
+                                <Text as='p' textStyle='p'>Кол-во инвалидов: {userTask?.numberOfDisabled}</Text>
+                                <Text as='p' textStyle='p'>Кол-во пожилых: {userTask?.numberOfOld}</Text>
+                                <Text as='p' textStyle='p'>Кол-во беременных: {userTask?.numberOfPregnant}</Text>
+                                <Text as='p' textStyle='p'>Описание ситуации: {userTask?.description}</Text>
+                            </Box>
+                            
+                            {userTask?.verificationStatus === 2 && (
+                                <Box borderTopWidth='1px' borderColor='#1e88e5' pt='2' mt='3'>
+                                    <Text as='p' textStyle='p'>Комментарий админимтратора: {userTask?.comment}</Text>
+
+                                    <Button
+                                        rightIcon={<EditIcon />}
+                                        w='100%'
+                                        justifyContent="left"
+                                        maxW='fit-content'
+                                        bg='#1e88e5'
+                                        color='white'
+                                        _hover={{color: 'white' }}
+                                        mt='2'
+                                        onClick={() => {setIsPopupOpen(true); setIsSubmit(false)}}
+                                    >
+                                        редактировать
+                                    </Button>
+                                </Box>
+                            )}
+                            
+                        </AccordionPanel>
+                    </AccordionItem>
+                </Accordion>
 
                 {isPopupOpen && (
                     <Box position='fixed' zIndex='1000' top='50%' mt='-30vh' left='50%' ml='-25%' w='50%' h='60vh' bg='white' borderRadius='30px' borderWidth='1px' borderColor='GrayText'>
@@ -227,6 +320,7 @@ const TasksPage:FC<ITasksPageProps> = () => {
                         </VStack>
                     </Box>
                 )}
+
             </Box>
             
         </MainLayout>

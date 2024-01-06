@@ -10,6 +10,7 @@ import {
   Text,
   Avatar,
   AvatarBadge,
+  Button,
 } from '@chakra-ui/react';
 import { HamburgerIcon, BellIcon } from '@chakra-ui/icons';
 import { NavLink } from 'react-router-dom';
@@ -27,6 +28,17 @@ const Header:FC<IHeaderProps> = ({onToggle, isOpen}) => {
 
     const userEmail = Cookies.get('email')
     const userRole = Cookies.get('userRole')
+
+    const logout = () => {
+        Cookies.remove('id');
+        Cookies.remove('email');
+        Cookies.remove('userRole');
+        Cookies.remove('userType');
+        Cookies.remove('token');
+        Cookies.remove('uuid');
+
+        location.reload();
+    }
 
     return (
         <Flex justify="space-between" align="center" p="4" bg="headerBgColor" color="headerTextColor">
@@ -73,6 +85,17 @@ const Header:FC<IHeaderProps> = ({onToggle, isOpen}) => {
                                     <option value="отошел">отошел</option>
                                 </select>
                             </Text>
+
+                            <Button
+                                mt={4}
+                                colorScheme="primary.600"
+                                color='primary.600'
+                                borderWidth='1px'
+                                borderColor='#1e88e5'
+                                onClick={() => logout()}
+                            >
+                                Выйти
+                            </Button>
                         </PopoverContent>
                     </Popover>
                 </Box>

@@ -26,7 +26,8 @@ const RegisterPage:FC<IRegisterPageProps> = () => {
     const onSubmit = async (data: any) => {
         setIsLoading(true);
 
-        const formattedDate = new Date(data.dateOfDeparture);
+        const dateParts = data.dateOfDeparture.split('.'); // Разделение исходной даты
+        const formattedDate = `${dateParts[0]}`; // Перестановка и форматирование
         const formattedPhoneNumber = data.phone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
 
         const formData = {
@@ -34,10 +35,12 @@ const RegisterPage:FC<IRegisterPageProps> = () => {
             age: parseInt(data.age, 10), // Преобразование возраста в число
             maritalStatus: parseInt(data.maritalStatus, 10), // Преобразование семейного статуса в число
             socialStatus: parseInt(data.socialStatus, 10), // Преобразование социального статуса в число
-            dateOfDeparture: formattedDate.toISOString(),
+            dateOfDeparture: formattedDate,
             phone: formattedPhoneNumber,
         };
 
+        console.log(formData)
+        
         const resp = await registerBeneficiaries(
             formData.firstName,
             formData.lastName,
@@ -52,7 +55,10 @@ const RegisterPage:FC<IRegisterPageProps> = () => {
             formData.phone,
         );
 
+        
+        
         if (resp.status === 200) {
+            
             alert('Сейчас вы перейдете на страницу логина')
 
             navigate('/login')
