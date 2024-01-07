@@ -55,17 +55,16 @@ const TasksPage:FC<ITasksPageProps> = () => {
             numberOfDisabled: parseInt(data.numberOfDisabled, 10),
             numberOfPregnant: parseInt(data.numberOfPregnant, 10),
             description: data.description,
-            documents: [
-                "s"
-            ],
+            documents: data.documents,
             comment: '',
             verificationStatus: 0,
         };
 
+        console.log(formData)
+
         const resp = isSubmit ? 
             await createBeneficiaryVerification(
                 token,
-                formData.beneficiary,
                 formData.numberOfAdults,
                 formData.numberOfChildren,
                 formData.numberOfOld,
@@ -73,8 +72,6 @@ const TasksPage:FC<ITasksPageProps> = () => {
                 formData.numberOfPregnant,
                 formData.description,
                 formData.documents,
-                formData.comment,
-                formData.verificationStatus,
         ) : await resubmitBeneficiaryVerification(
                 token,
                 formData.beneficiary,
@@ -306,6 +303,18 @@ const TasksPage:FC<ITasksPageProps> = () => {
                                 {...register('description', { required: 'This field is required' })}
                                 />
                                 <FormErrorMessage>Заполните</FormErrorMessage>
+                            </FormControl>
+
+                            <FormControl>
+                                <FormLabel htmlFor="documents">Загрузить документы</FormLabel>
+                                <Input
+                                    id="documents"
+                                    type='file'
+                                    multiple 
+                                    {...register('documents')}
+                                />
+                                {/* Опционально: Сообщение об ошибке */}
+                                <FormErrorMessage>Ошибка загрузки файла</FormErrorMessage>
                             </FormControl>
 
                             {/* Кнопка отправки */}
