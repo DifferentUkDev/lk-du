@@ -156,7 +156,7 @@ const RegisterPage:FC<IRegisterPageProps> = () => {
 
                 {/* Дата убытия */}
                 <FormControl isInvalid={!!errors.dateOfDeparture}>
-                    <FormLabel htmlFor="dateOfDeparture">Дата убытия</FormLabel>
+                    <FormLabel htmlFor="dateOfDeparture">Дата прибытия</FormLabel>
                     <Input
                     id="dateOfDeparture"
                     type="date"

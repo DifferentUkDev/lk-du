@@ -137,64 +137,67 @@ const TasksPage:FC<ITasksPageProps> = () => {
                     Новая заявка
                 </Button>
 
-                <Accordion defaultIndex={[0]} allowMultiple mt='20px' p='5px'>
-                    <AccordionItem w='100%' borderWidth='1px' borderColor='#1e88e5' borderRadius='15px'>
-                        <AccordionButton w='100%'>
-                            <HStack 
-                                as="span" 
-                                flex='1' 
-                                textAlign='left'  
-                                justifyContent='space-between' 
-                                alignItems='center'
-                            >
-                                <Text as='h4' textStyle='h4'>Заявка на верификацию</Text>
-                                
-                                <Badge 
-                                    colorScheme={colorBadge(userTask?.verificationStatus)} 
-                                    mr='3' 
-                                    fontSize='md' 
-                                    borderRadius='5px' 
-                                    textTransform='lowercase'
+                {userTask && (
+                    <Accordion defaultIndex={[0]} allowMultiple mt='20px' p='5px'>
+                        <AccordionItem w='100%' borderWidth='1px' borderColor='#1e88e5' borderRadius='15px'>
+                            <AccordionButton w='100%'>
+                                <HStack 
+                                    as="span" 
+                                    flex='1' 
+                                    textAlign='left'  
+                                    justifyContent='space-between' 
+                                    alignItems='center'
                                 >
-                                    {status(userTask?.verificationStatus)}
-                                </Badge>
-                            </HStack>
-                            <AccordionIcon />
-                        </AccordionButton>
-
-                        <AccordionPanel>
-                            <Box>
-                                <Text as='p' textStyle='p'>Кол-во взрослых: {userTask?.numberOfAdults}</Text>
-                                <Text as='p' textStyle='p'>Кол-во детей: {userTask?.numberOfChildren}</Text>
-                                <Text as='p' textStyle='p'>Кол-во инвалидов: {userTask?.numberOfDisabled}</Text>
-                                <Text as='p' textStyle='p'>Кол-во пожилых: {userTask?.numberOfOld}</Text>
-                                <Text as='p' textStyle='p'>Кол-во беременных: {userTask?.numberOfPregnant}</Text>
-                                <Text as='p' textStyle='p'>Описание ситуации: {userTask?.description}</Text>
-                            </Box>
-                            
-                            {userTask?.verificationStatus === 2 && (
-                                <Box borderTopWidth='1px' borderColor='#1e88e5' pt='2' mt='3'>
-                                    <Text as='p' textStyle='p'>Комментарий админимтратора: {userTask?.comment}</Text>
-
-                                    <Button
-                                        rightIcon={<EditIcon />}
-                                        w='100%'
-                                        justifyContent="left"
-                                        maxW='fit-content'
-                                        bg='#1e88e5'
-                                        color='white'
-                                        _hover={{color: 'white' }}
-                                        mt='2'
-                                        onClick={() => {setIsPopupOpen(true); setIsSubmit(false)}}
+                                    <Text as='h4' textStyle='h4'>Заявка на верификацию</Text>
+                                    
+                                    <Badge 
+                                        colorScheme={colorBadge(userTask?.verificationStatus)} 
+                                        mr='3' 
+                                        fontSize='md' 
+                                        borderRadius='5px' 
+                                        textTransform='lowercase'
                                     >
-                                        редактировать
-                                    </Button>
+                                        {status(userTask?.verificationStatus)}
+                                    </Badge>
+                                </HStack>
+                                <AccordionIcon />
+                            </AccordionButton>
+
+                            <AccordionPanel>
+                                <Box>
+                                    <Text as='p' textStyle='p'>Кол-во взрослых: {userTask?.numberOfAdults}</Text>
+                                    <Text as='p' textStyle='p'>Кол-во детей: {userTask?.numberOfChildren}</Text>
+                                    <Text as='p' textStyle='p'>Кол-во инвалидов: {userTask?.numberOfDisabled}</Text>
+                                    <Text as='p' textStyle='p'>Кол-во пожилых: {userTask?.numberOfOld}</Text>
+                                    <Text as='p' textStyle='p'>Кол-во беременных: {userTask?.numberOfPregnant}</Text>
+                                    <Text as='p' textStyle='p'>Описание ситуации: {userTask?.description}</Text>
                                 </Box>
-                            )}
-                            
-                        </AccordionPanel>
-                    </AccordionItem>
-                </Accordion>
+                                
+                                {userTask?.verificationStatus === 2 && (
+                                    <Box borderTopWidth='1px' borderColor='#1e88e5' pt='2' mt='3'>
+                                        <Text as='p' textStyle='p'>Комментарий админимтратора: {userTask?.comment}</Text>
+
+                                        <Button
+                                            rightIcon={<EditIcon />}
+                                            w='100%'
+                                            justifyContent="left"
+                                            maxW='fit-content'
+                                            bg='#1e88e5'
+                                            color='white'
+                                            _hover={{color: 'white' }}
+                                            mt='2'
+                                            onClick={() => {setIsPopupOpen(true); setIsSubmit(false)}}
+                                        >
+                                            редактировать
+                                        </Button>
+                                    </Box>
+                                )}
+                                
+                            </AccordionPanel>
+                        </AccordionItem>
+                    </Accordion>
+                )}
+                
 
                 {isPopupOpen && (
                     <Box position='fixed' zIndex='1000' top='50%' mt='-30vh' left='50%' ml='-25%' w='50%' h='60vh' bg='white' borderRadius='30px' borderWidth='1px' borderColor='GrayText'>
