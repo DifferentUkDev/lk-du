@@ -8,15 +8,15 @@ export const createBeneficiaryVerification = (
     numberOfDisabled: number,
     numberOfPregnant: number,
     description: string,
-    documents: File[],
+    // documents: File[],
 ) => {
-    const files = Array.from(documents);
-    console.log('В таком виде добавляются в формдату', files)
+    // const files = Array.from(documents);
+    // console.log('В таком виде добавляются в формдату', files)
     const formData = new FormData();
 
-    files.forEach((file, index) => {
-        formData.append(`Files[${index}]`, file);
-    });
+    // files.forEach((file, index) => {
+    //     formData.append(`Files[${index}]`, file);
+    // });
     formData.append('NumberOfAdults', numberOfAdults.toString());
     formData.append('NumberOfChildren', numberOfChildren.toString());
     formData.append('NumberOfOld', numberOfOld.toString());
@@ -56,10 +56,10 @@ export const resubmitBeneficiaryVerification = (
     numberOfDisabled: number,
     numberOfPregnant: number,
     description: string,
-    documents: string[],
+    // documents: string[],
     comment: string,
     verificationStatus: number,
 ) => {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    return api.post('/Inquiry/ResubmitBeneficiaryVerificationAttempt', {beneficiary, numberOfAdults, numberOfChildren, numberOfOld, numberOfDisabled, numberOfPregnant, description, documents, comment, verificationStatus}).then((resp) => resp)
+    return api.post('/Inquiry/ResubmitBeneficiaryVerificationAttempt', {beneficiary, numberOfAdults, numberOfChildren, numberOfOld, numberOfDisabled, numberOfPregnant, description, comment, verificationStatus}).then((resp) => resp)
 }
