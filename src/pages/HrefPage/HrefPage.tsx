@@ -350,7 +350,7 @@ const HrefPage:FC<IHrefPageProps> = () => {
                                 type="text"
                                 {...register('inn', {
                                     required: 'This field is required',
-                                    validate: value => /^[0-9]{8}$/.test(value) || 'inn must have 10 digits'
+                                    validate: value => /^[0-9]{10}$/.test(value) || 'inn must have 10 digits'
                                 })}
                                 />
                                 <FormErrorMessage>Заполните</FormErrorMessage>
@@ -378,7 +378,7 @@ const HrefPage:FC<IHrefPageProps> = () => {
                                 type="text"
                                 {...register('ogrn', {
                                     required: 'This field is required',
-                                    validate: value => /^[0-9]{12}$/.test(value) || 'ogrn must have 9 digits'
+                                    validate: value => /^[0-9]{13}$/.test(value) || 'ogrn must have 9 digits'
                                 })}
                                 />
                                 <FormErrorMessage>Заполните</FormErrorMessage>
