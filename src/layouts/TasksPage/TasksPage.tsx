@@ -74,7 +74,6 @@ const TasksPage:FC<ITasksPageProps> = () => {
                 formData.documents,
         ) : await resubmitBeneficiaryVerification(
                 token,
-                formData.beneficiary,
                 formData.numberOfAdults,
                 formData.numberOfChildren,
                 formData.numberOfOld,
@@ -82,8 +81,6 @@ const TasksPage:FC<ITasksPageProps> = () => {
                 formData.numberOfPregnant,
                 formData.description,
                 formData.documents,
-                formData.comment,
-                formData.status,
             );
 
         console.log(resp)
