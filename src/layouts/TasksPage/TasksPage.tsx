@@ -23,7 +23,7 @@ const TasksPage:FC<ITasksPageProps> = () => {
         numberOfDisabled?:number,
         numberOfOld?:number,
         numberOfPregnant?:number,
-        verificationStatus?:number,
+        status?:number,
     }>();
 
     const {
@@ -57,7 +57,7 @@ const TasksPage:FC<ITasksPageProps> = () => {
             description: data.description,
             documents: data.documents,
             comment: '',
-            verificationStatus: 0,
+            status: 0,
         };
 
         console.log(formData)
@@ -83,7 +83,7 @@ const TasksPage:FC<ITasksPageProps> = () => {
                 formData.description,
                 formData.documents,
                 formData.comment,
-                formData.verificationStatus,
+                formData.status,
             );
 
         console.log(resp)
@@ -148,13 +148,13 @@ const TasksPage:FC<ITasksPageProps> = () => {
                                     <Text as='h4' textStyle='h4'>Заявка на верификацию</Text>
                                     
                                     <Badge 
-                                        colorScheme={colorBadge(userTask?.verificationStatus)} 
+                                        colorScheme={colorBadge(userTask?.status)} 
                                         mr='3' 
                                         fontSize='md' 
                                         borderRadius='5px' 
                                         textTransform='lowercase'
                                     >
-                                        {status(userTask?.verificationStatus)}
+                                        {status(userTask?.status)}
                                     </Badge>
                                 </HStack>
                                 <AccordionIcon />
@@ -170,7 +170,7 @@ const TasksPage:FC<ITasksPageProps> = () => {
                                     <Text as='p' textStyle='p'>Описание ситуации: {userTask?.description}</Text>
                                 </Box>
                                 
-                                {userTask?.verificationStatus === 2 && (
+                                {userTask?.status === 2 && (
                                     <Box borderTopWidth='1px' borderColor='#1e88e5' pt='2' mt='3'>
                                         <Text as='p' textStyle='p'>Комментарий админимтратора: {userTask?.comment}</Text>
 
