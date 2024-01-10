@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect, useState } from "react";
 import MainLayout from "../MainLayout/MainLayout";
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Badge, Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, IconButton, Input, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Badge, Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, IconButton, Image, Input, Modal, ModalCloseButton, ModalContent, ModalOverlay, Spinner, Text, VStack } from "@chakra-ui/react";
 import { CloseIcon, EditIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import { useForm } from "react-hook-form";
 import { createBeneficiaryVerification, resubmitBeneficiaryVerification } from "@/api/createTask";
 import Cookies from "js-cookie";
 import { getBeneficiaryVerificationAttempt } from "@/api/getTasks";
 import { colorBadge, status } from "@/utils/status";
+import { convertFilePathToUrl } from "@/utils/convertFileUrl";
 
 interface ITasksPageProps {}
 
@@ -24,7 +25,17 @@ const TasksPage:FC<ITasksPageProps> = () => {
         numberOfOld?:number,
         numberOfPregnant?:number,
         status?:number,
+        files?: string[],
     }>();
+
+    // Состояние для управления видимостью модального окна и выбранного изображения
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    const handleImageClick = (image) => {
+        setSelectedImage(image);
+        setIsModalOpen(true);
+    };
 
     const {
         handleSubmit,
@@ -165,6 +176,20 @@ const TasksPage:FC<ITasksPageProps> = () => {
                                     <Text as='p' textStyle='p'>Кол-во пожилых: {userTask?.numberOfOld}</Text>
                                     <Text as='p' textStyle='p'>Кол-во беременных: {userTask?.numberOfPregnant}</Text>
                                     <Text as='p' textStyle='p'>Описание ситуации: {userTask?.description}</Text>
+                                    <Text as='p' textStyle='p' mt='3'>Документы:</Text> 
+                                    <HStack maxW='100%' mt={2}>
+                                        {userTask.files &&  userTask.files.map((item) => (
+                                            <Image 
+                                                w='40' 
+                                                h='auto' 
+                                                src={convertFilePathToUrl(item)} 
+                                                cursor='pointer'
+                                                onClick={() => handleImageClick(convertFilePathToUrl(item))}
+                                            />
+                                        ))}
+                                    </HStack>
+                                    
+                                    
                                 </Box>
                                 
                                 {userTask?.status === 2 && (
@@ -191,6 +216,14 @@ const TasksPage:FC<ITasksPageProps> = () => {
                         </AccordionItem>
                     </Accordion>
                 )}
+
+                <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size='full' isCentered>
+                    <ModalOverlay />
+                    <ModalContent bg='black' m={0} p={0}>
+                    <ModalCloseButton color='white' />
+                    <Image src={selectedImage ? selectedImage : ''} maxW='100%' maxH='100vh' m='auto' />
+                    </ModalContent>
+                </Modal>
                 
 
                 {isPopupOpen && (
