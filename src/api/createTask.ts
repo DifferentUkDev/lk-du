@@ -14,9 +14,10 @@ export const createBeneficiaryVerification = (
     console.log('В таком виде добавляются в формдату', files)
     const formData = new FormData();
 
-    files.forEach((file, index) => {
-        formData.append(`Files[${index}]`, file);
+    files.forEach((file) => {
+        formData.append(`Files`, file);
     });
+    // formData.append('Files', files)
     formData.append('NumberOfAdults', numberOfAdults.toString());
     formData.append('NumberOfChildren', numberOfChildren.toString());
     formData.append('NumberOfOld', numberOfOld.toString());
@@ -27,7 +28,6 @@ export const createBeneficiaryVerification = (
     
     
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    api.defaults.headers.post['Content-Type'] = 'multipart/form-data';
 
     console.log('FORMDATA',
         formData.get('NumberOfAdults'),
@@ -55,8 +55,8 @@ export const resubmitBeneficiaryVerification = (
     console.log('В таком виде добавляются в формдату', files)
     const formData = new FormData();
 
-    files.forEach((file, index) => {
-        formData.append(`Files[${index}]`, file);
+    files.forEach((file) => {
+        formData.append(`Files`, file);
     });
     formData.append('NumberOfAdults', numberOfAdults.toString());
     formData.append('NumberOfChildren', numberOfChildren.toString());
@@ -68,7 +68,6 @@ export const resubmitBeneficiaryVerification = (
     
     
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    api.defaults.headers.post['Content-Type'] = 'multipart/form-data';
 
     console.log('FORMDATA',
         formData.get('NumberOfAdults'),
